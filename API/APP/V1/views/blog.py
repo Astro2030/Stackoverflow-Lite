@@ -34,6 +34,30 @@ def get_all_questions():
     return jsonify({"questions": question.get_questions()}),200
     abort(404)
 
+@BP.route('/post_question/', methods=['POST'])
+def add_question():
+    data = request.get_json(force=True, silent=True)
+    if not data:
+        raise MalformedRequest(JSON_ERR_MSG)
+    try:
+        question_id=len(answer_list)+1
+        author = data['author']
+        timeposted = datetime.datetime.now()
+        description = data['description']
+
+    except KeyError as e:
+        raise MalformedRequest(f'Missing {e.args} field(s)', 400)
+    quiz = {
+        'question_id': question_id,
+        'author' : author,
+        'timeposted' : datetime.datetime.now(),
+        'description' : description,
+    }
+    question_list.append(quiz)
+    return make_response(jsonify({
+        'status': "Ok",
+        'message': "posted successfully",
+        'question_list':question_list}),201)
 
 @BP.route('/home/<int:question_id>', methods=['GET','POST'])
 def get_a_specific_question(question_id):
