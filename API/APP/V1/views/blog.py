@@ -22,6 +22,18 @@ def bad_request(e):
     """
     return make_response(jsonify({'Failed': 'bad request'}), 400)
 
+@BP.route("/questions/", methods=["GET","POST"])
+def get_all_questions():
+    """
+    View all questions.
+    """
+    if question:
+        for quiz in question.get_questions():
+            #get number of answers
+            quiz["answers"]=len(question.get_answers(quiz["question_id"]))
+    return jsonify({"questions": question.get_questions()}),200
+    abort(404)
+
 
 
 
