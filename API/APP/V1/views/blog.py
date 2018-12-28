@@ -35,6 +35,7 @@ def get_all_questions():
     abort(404)
 
 
+
 @BP.route('/home/<int:question_id>', methods=['GET','POST'])
 def get_a_specific_question(question_id):
     """
