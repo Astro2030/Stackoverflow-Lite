@@ -35,7 +35,19 @@ def get_all_questions():
     abort(404)
 
 
-
+@BP.route('/home/<int:question_id>', methods=['GET','POST'])
+def get_a_specific_question(question_id):
+    """
+    Get a specific question.
+    """
+    if request.method == 'GET':
+        question_list = question.get_questions()
+        my_question=[my_question for my_question in question_list if my_question['question_id'] == question_id]
+        if my_question:
+            question_answers=question.get_answers(my_question[0]['question_id'])
+            my_question[0]["answers"]=question_answers
+        return jsonify({"question": my_question}),200
+        abort(404)
 
 
 if __name__ == "__main__":
