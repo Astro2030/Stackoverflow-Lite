@@ -34,8 +34,7 @@ def get_all_questions():
     return jsonify({"questions": question.get_questions()}),200
     abort(404)
 
-
-@BP.route('/home/<int:question_id>', methods=['GET','POST'])
+@BP.route('/question/<int:question_id>', methods=['GET','POST','PUT','DELETE'])
 def get_a_specific_question(question_id):
     """
     Get a specific question.
@@ -48,6 +47,34 @@ def get_a_specific_question(question_id):
             my_question[0]["answers"]=question_answers
         return jsonify({"question": my_question}),200
         abort(404)
+
+    elif request.method == 'POST':
+        """handle POST /app/v1/views/ endpoint"""
+        answer_list = question.get_answers(question_id)
+        data = request.get_json(force=True, silent=True)
+        if not data:
+            raise MalformedRequest(JSON_ERR_MSG)
+        try:
+            answer_id=len(answer_list)+1
+            author = data['author']
+            timeposted = datetime.datetime.now()
+            description = data['description']
+
+        except KeyError as e:
+            raise MalformedRequest(f'Missing {e.args} field(s)', 400)
+        new_answer = {
+            'question_id': question_id,
+            'author' : author,
+            'timeposted' : datetime.datetime.now(),
+            'description' : description,
+            'answer_id': answer_id
+        }
+        answer_list.append(new_answer)
+        return make_response(jsonify({
+            'status': "Ok",
+            'message': "posted successfully",
+            'answer':new_answer}),201)
+    
 
 @BP.route('/post_question/', methods=['POST'])
 def add_question():
