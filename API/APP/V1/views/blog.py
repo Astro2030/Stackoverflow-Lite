@@ -34,7 +34,6 @@ def get_all_questions():
     return jsonify({"questions": question.get_questions()}),200
     abort(404)
 
-@BP.route('/question/<int:question_id>', methods=['GET','POST','PUT','DELETE'])
 def get_a_specific_question(question_id):
     """
     Get a specific question.
