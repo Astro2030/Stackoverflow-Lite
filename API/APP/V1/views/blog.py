@@ -34,6 +34,7 @@ def get_all_questions():
     return jsonify({"questions": question.get_questions()}),200
     abort(404)
 
+@BP.route('/question/<int:question_id>', methods=['GET','POST','PUT','DELETE'])
 def get_a_specific_question(question_id):
     """
     Get a specific question.
@@ -99,6 +100,16 @@ def add_question():
         'status': "Ok",
         'message': "posted successfully",
         'question_list':question_list}),201)
+
+@BP.route('/delete/<int:question_id>', methods=['DELETE'])
+def delete_question(question_id):
+    """
+    Delete a question.
+    """
+    if question.delete_question(question_id):
+        return jsonify({
+            "message":"Deleted succesful",}),200
+    abort(404)
 
 
 if __name__ == "__main__":
