@@ -101,6 +101,15 @@ def add_question():
         'message': "posted successfully",
         'question_list':question_list}),201)
 
+@BP.route('/delete/<int:question_id>', methods=['DELETE'])
+def delete_question(question_id):
+    """
+    Delete a question.
+    """
+    if question.delete_question(question_id):
+        return jsonify({
+            "message":"Deleted succesful",}),200
+    abort(404)
 
 
 if __name__ == "__main__":
